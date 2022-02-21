@@ -1,0 +1,25 @@
+.key {
+	background-color: #d3d6da;
+	padding: 10px;
+	margin: 5px;
+	text-transform: uppercase;
+	border-radius: 4px;
+	border: none;
+	/* display: flex; */
+	height: 58px;
+	grid-column: span 2;
+}
+
+.key.col3 {
+	grid-column: span 3;
+}
+
+.spacer {
+	grid-column: span 3;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-template-areas: "s k k";
+}
+.spacer button {
+	grid-area: k;
+}

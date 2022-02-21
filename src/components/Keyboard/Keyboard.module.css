@@ -1,0 +1,22 @@
+.keyboard {
+	width: 800px;
+	margin: 0 auto;
+	display: grid;
+	grid-template-columns: repeat(20, 1fr);
+	/* grid-template-areas: */
+	/* "k k k k k k k k k k k k k k k k k k k k"
+		"s k k k k k k k k k k k k k k k k k k s"
+		"e e e k k k k k k k k k k k k k k b b b"; */
+}
+
+.keyboard .row1 {
+	grid-template-columns: repeat(10, 1fr);
+}
+
+.keyboard .row2 {
+	grid-template-columns: repeat(9, 1fr);
+}
+
+.keyboard .row3 {
+	grid-template-columns: 3fr repeat(7, 2fr) 3fr;
+}

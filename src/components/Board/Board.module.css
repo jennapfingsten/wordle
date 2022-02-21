@@ -1,0 +1,8 @@
+.tileContainer {
+	width: 346px;
+	margin: 0 auto;
+	display: grid;
+	grid-template-columns: repeat(5, 65px);
+	grid-template-rows: repeat(6, 65px);
+	grid-gap: 5px;
+}
