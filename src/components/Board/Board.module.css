@@ -6,3 +6,25 @@
 	grid-template-rows: repeat(6, 65px);
 	grid-gap: 5px;
 }
+.tile {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 35px;
+	font-weight: bold;
+	text-transform: uppercase;
+	color: white;
+}
+[data-status="pending"] {
+	border: 2px solid black;
+	color: black;
+}
+[data-status="placed"] {
+	background-color: #6aaa64;
+}
+[data-status="present"] {
+	background-color: #c9b458;
+}
+[data-status="absent"] {
+	background-color: grey;
+}

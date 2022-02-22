@@ -1,162 +1,133 @@
-import React, { useState, useReducer } from "react";
+import React, { useState, useReducer, useContext } from "react";
 import styles from "./App.module.css";
 import Header from "./components/Header/Header";
 import Keyboard from "./components/Keyboard/Keyboard";
 import Board from "./components/Board/Board";
+import BoardContext from "./store/board-context";
+import { guesses } from "./data/guesses";
+import { answers } from "./data/answers";
 
-//https://github.com/cwackerfuss/react-wordle
-/*
-Some notes from one git:
-- onenter, ondelete, onchar methods in app, sent down w/ props
-- keyboard listener in keyboard. In useEffect, is bound/unbound (cleanup) each time char is added
-- in app, when a char is added, it checks if it's less than max and setCurrentGuess (state) w/ old state concat with new letter
-- same with delete. Keep appending current guess
-- on enter, get that value from state and do the things
+let NUM_ROWS = 6;
+let NUM_LETTERS = 5;
 
-*/
+const defaultBoard = Array.from({ length: NUM_ROWS }, (v, i) => {
+	return Array.from({ length: NUM_LETTERS }, (w, j) => {
+		const id = i + "-" + j;
+		return { letter: "", id: id, status: "" };
+	});
+});
 
-// const defaultBoard = [
-// 	["", "", "", "", ""],
-// 	["", "", "", "", ""],
-// 	["", "", "", "", ""],
-// 	["", "", "", "", ""],
-// 	["", "", "", "", ""],
-// 	["", "", "", "", ""],
-// ];
+const randomNumber = Math.floor(Math.random(answers.length) * answers.length);
+const todaysWord = answers[randomNumber];
+console.log(todaysWord);
 
-const defaultBoard = [
-	[
-		{
-			id: "1",
-			letter: "W",
-			status: "grey",
-		},
-		{
-			id: "2",
-			letter: "O",
-			status: "yellow",
-		},
-		{
-			id: "3",
-			letter: "R",
-			status: "green",
-		},
-		{
-			id: "4",
-			letter: "D",
-		},
-		{
-			id: "5",
-			letter: "S",
-		},
-	],
-	[
-		{
-			id: "6",
-			letter: "",
-		},
-		{
-			id: "7",
-			letter: "",
-		},
-		{
-			id: "8",
-			letter: "",
-		},
-		{
-			id: "9",
-			letter: "",
-		},
-		{
-			id: "10",
-			letter: "",
-		},
-	],
-	[
-		{
-			id: "11",
-			letter: "",
-		},
-		{
-			id: "tile2",
-			letter: "",
-		},
-		{
-			id: "tile3",
-			letter: "",
-		},
-		{
-			id: "tile4",
-			letter: "",
-		},
-		{
-			id: "tile5",
-			letter: "",
-		},
-	],
-];
+const fullList = guesses.concat(answers);
+
+const isWordInWordlist = (word) => {
+	return fullList.includes(word);
+};
+
+const getTileStatus = (letter, index) => {
+	if (todaysWord.includes(letter)) {
+		if (todaysWord.charAt(index) === letter) {
+			return "placed";
+		} else {
+			return "present";
+		}
+	} else {
+		return "absent";
+	}
+};
 
 function App() {
 	const [currentGuess, setCurrentGuess] = useState("");
 	const [board, setBoard] = useState(defaultBoard);
+	const [row, setRow] = useState(0);
 
-	const initialPosition = {
-		row: 0,
-		col: 0,
+	React.useEffect(() => {
+		let currentRow = board[row];
+
+		setBoard((curr) => {
+			let workingRow = curr[row].slice(); //array for the row we're working on
+			let workingBoard = curr.slice();
+			for (let i = 0; i < NUM_LETTERS; i++) {
+				workingRow[i].letter = currentGuess.charAt(i);
+				workingRow[i].status = currentGuess.charAt(i) ? "pending" : "";
+			}
+
+			workingBoard[row] = workingRow;
+
+			return workingBoard;
+		});
+	}, [currentGuess]);
+
+	const updateBoardStatuses = () => {
+		setBoard((curr) => {
+			let workingRow = curr[row].slice();
+			let workingBoard = curr.slice();
+			for (let i = 0; i < NUM_LETTERS; i++) {
+				workingRow[i].status = getTileStatus(currentGuess.charAt(i), i);
+			}
+			workingBoard[row] = workingRow;
+			return workingBoard;
+		});
 	};
 
-	const positionReducer = (state, action) => {
-		switch (action.type) {
-			case "increaseRow":
-				return {
-					...state,
-					row: state.row + 1,
-				};
-			case "increaseCol":
-				console.log(state.col);
-				return {
-					...state,
-					col: state.col + 1,
-				};
-			case "decreaseCol":
-				return {
-					...state,
-					col: state.col - 1,
-				};
-			default:
-				return;
+	const onEnter = () => {
+		if (currentGuess.length === NUM_LETTERS) {
+			if (isWordInWordlist(currentGuess)) {
+				updateBoardStatuses();
+				if (currentGuess === todaysWord) {
+					alert("You win!");
+				} else {
+					//Find the wrong letters
+					//Update state
+					if (row === NUM_LETTERS) {
+						//game over
+					} else {
+						increaseRow();
+						setCurrentGuess("");
+					}
+				}
+			} else {
+				alert("Not in word list");
+				//TODO: jiggle
+			}
 		}
 	};
 
-	const [position, updatePosition] = useReducer(
-		positionReducer,
-		initialPosition
-	);
-
-	const onEnter = () => {
-		if (position.col < 5) updatePosition({ type: "increaseCol" });
-	};
-
 	const onDelete = () => {
-		if (position.col > 0 && position.col < 6)
-			updatePosition({ type: "decreaseCol" });
+		if (currentGuess.length > 0 && currentGuess.length < 6) {
+			setCurrentGuess((curr) => {
+				return curr.slice(0, curr.length - 1);
+			});
+		}
 	};
 
 	const onLetter = (letter) => {
-		console.log("Pressed " + letter);
-		//append to current guess
+		if (currentGuess.length < NUM_LETTERS) {
+			setCurrentGuess((curr) => curr + letter);
+		}
+	};
+
+	const increaseRow = () => {
+		setRow((curr) => curr + 1);
 	};
 
 	return (
 		<div className={styles.container}>
-			Column: {position.col} <br />
-			Row: {position.row}
 			<header>
 				<Header />
 			</header>
 			<main>
-				<Board boardConfig={board} />
-				<Keyboard onEnter={onEnter} onDelete={onDelete} onLetter={onLetter} />
+				<Board boardConfig={board} key={board} />
+
+				<Keyboard
+					onEnter={onEnter}
+					onDelete={onDelete}
+					onLetter={onLetter}
+					row={row}
+				/>
 			</main>
 		</div>
 	);

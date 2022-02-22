@@ -33,7 +33,7 @@ const allKeys = [
 	"back",
 ];
 
-const Keyboard = ({ onEnter, onDelete, onLetter }) => {
+const Keyboard = ({ onEnter, onDelete, onLetter, row }) => {
 	const callKeyboardFunctions = (key) => {
 		key = key.toLowerCase();
 		if (key === "enter") {
@@ -55,6 +55,10 @@ const Keyboard = ({ onEnter, onDelete, onLetter }) => {
 			document.removeEventListener("keydown", listener);
 		};
 	}, [callKeyboardFunctions]);
+
+	React.useEffect(() => {
+		console.log("The row has changed");
+	}, [row]);
 
 	return (
 		<div className={styles.keyboard}>
