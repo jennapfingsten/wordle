@@ -1,3 +1,5 @@
+@import "../../../vars/global.css";
+
 .key {
 	background-color: #d3d6da;
 	padding: 10px;
@@ -22,4 +24,18 @@
 }
 .spacer button {
 	grid-area: k;
+}
+
+[data-status="pending"] {
+	border: 2px solid black;
+	color: black;
+}
+[data-status="placed"] {
+	background-color: var(--color-placed);
+}
+[data-status="present"] {
+	background-color: var(--color-present);
+}
+[data-status="absent"] {
+	background-color: var(--color-absent);
 }

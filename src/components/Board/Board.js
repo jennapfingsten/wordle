@@ -1,5 +1,5 @@
-import React, { useState, useContext } from "react";
-import styles from "./Board.module.css";
+import React from 'react';
+import styles from './Board.module.css';
 
 const Board = ({ boardConfig }) => {
 	/*

@@ -6,15 +6,23 @@ import Board from "./components/Board/Board";
 import BoardContext from "./store/board-context";
 import { guesses } from "./data/guesses";
 import { answers } from "./data/answers";
+import { keys } from "./data/keyboard";
+import * as CONSTANTS from "./data/constants.js";
 
-let NUM_ROWS = 6;
-let NUM_LETTERS = 5;
+const { NUM_LETTERS, NUM_ROWS } = CONSTANTS;
 
 const defaultBoard = Array.from({ length: NUM_ROWS }, (v, i) => {
 	return Array.from({ length: NUM_LETTERS }, (w, j) => {
 		const id = i + "-" + j;
 		return { letter: "", id: id, status: "" };
 	});
+});
+
+const keyboardConfig = Array.from(keys, (v, i) => {
+	return {
+		letter: v,
+		status: "",
+	};
 });
 
 const randomNumber = Math.floor(Math.random(answers.length) * answers.length);
@@ -30,35 +38,41 @@ const isWordInWordlist = (word) => {
 const getTileStatus = (letter, index) => {
 	if (todaysWord.includes(letter)) {
 		if (todaysWord.charAt(index) === letter) {
-			return "placed";
+			return CONSTANTS.PLACED;
 		} else {
-			return "present";
+			return CONSTANTS.PENDING;
 		}
 	} else {
-		return "absent";
+		return CONSTANTS.ABSENT;
 	}
 };
 
 function App() {
 	const [currentGuess, setCurrentGuess] = useState("");
 	const [board, setBoard] = useState(defaultBoard);
+	const [keyboard, setKeyboard] = useState(keyboardConfig);
 	const [row, setRow] = useState(0);
+	const [gameOver, setGameOver] = useState(0); //0/1 F/T
 
 	React.useEffect(() => {
 		let currentRow = board[row];
 
-		setBoard((curr) => {
-			let workingRow = curr[row].slice(); //array for the row we're working on
-			let workingBoard = curr.slice();
-			for (let i = 0; i < NUM_LETTERS; i++) {
-				workingRow[i].letter = currentGuess.charAt(i);
-				workingRow[i].status = currentGuess.charAt(i) ? "pending" : "";
-			}
+		if (row < NUM_ROWS) {
+			setBoard((curr) => {
+				let workingRow = curr[row].slice(); //array for the row we're working on
+				let workingBoard = curr.slice();
+				for (let i = 0; i < NUM_LETTERS; i++) {
+					workingRow[i].letter = currentGuess.charAt(i);
+					workingRow[i].status = currentGuess.charAt(i)
+						? CONSTANTS.PENDING
+						: "";
+				}
 
-			workingBoard[row] = workingRow;
+				workingBoard[row] = workingRow;
 
-			return workingBoard;
-		});
+				return workingBoard;
+			});
+		}
 	}, [currentGuess]);
 
 	const updateBoardStatuses = () => {
@@ -73,30 +87,44 @@ function App() {
 		});
 	};
 
-	const onEnter = () => {
-		if (currentGuess.length === NUM_LETTERS) {
-			if (isWordInWordlist(currentGuess)) {
-				updateBoardStatuses();
-				if (currentGuess === todaysWord) {
-					alert("You win!");
-				} else {
-					//Find the wrong letters
-					//Update state
-					if (row === NUM_LETTERS) {
-						//game over
-					} else {
-						increaseRow();
-						setCurrentGuess("");
-					}
-				}
-			} else {
-				alert("Not in word list");
-				//TODO: jiggle
+	const updateKeyboardStatuses = () => {
+		setKeyboard((curr) => {
+			let workingKeyboard = curr.slice();
+			for (let i = 0; i < NUM_LETTERS; i++) {
+				const letter = currentGuess.charAt(i);
+				const status = getTileStatus(letter, i);
+				workingKeyboard.find((key) => key.letter === letter).status = status;
 			}
+			return workingKeyboard;
+		});
+	};
+
+	const onEnter = () => {
+		if (gameOver) return;
+		if (currentGuess.length !== NUM_LETTERS) return;
+		if (isWordInWordlist(currentGuess)) {
+			updateBoardStatuses();
+			updateKeyboardStatuses();
+			if (currentGuess === todaysWord) {
+				alert("You win!");
+			} else {
+				if (row === NUM_ROWS - 1) {
+					alert("Game over");
+					setGameOver(1);
+					//need a game over function to remove all of the listeners, etc
+				} else {
+					increaseRow();
+					setCurrentGuess("");
+				}
+			}
+		} else {
+			alert("Not in word list");
+			//TODO: jiggle
 		}
 	};
 
 	const onDelete = () => {
+		if (gameOver) return;
 		if (currentGuess.length > 0 && currentGuess.length < 6) {
 			setCurrentGuess((curr) => {
 				return curr.slice(0, curr.length - 1);
@@ -105,6 +133,7 @@ function App() {
 	};
 
 	const onLetter = (letter) => {
+		if (gameOver) return;
 		if (currentGuess.length < NUM_LETTERS) {
 			setCurrentGuess((curr) => curr + letter);
 		}
@@ -126,7 +155,7 @@ function App() {
 					onEnter={onEnter}
 					onDelete={onDelete}
 					onLetter={onLetter}
-					row={row}
+					keyboardConfig={keyboardConfig}
 				/>
 			</main>
 		</div>

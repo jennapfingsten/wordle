@@ -1,44 +1,15 @@
-import React from "react";
-import Key from "./Key/Key";
-import styles from "./Keyboard.module.css";
+import React from 'react';
+import Key from './Key/Key';
+import styles from './Keyboard.module.css';
 
-const allKeys = [
-	"q",
-	"w",
-	"e",
-	"r",
-	"t",
-	"y",
-	"u",
-	"i",
-	"o",
-	"p",
-	"a",
-	"s",
-	"d",
-	"f",
-	"g",
-	"h",
-	"j",
-	"k",
-	"l",
-	"enter",
-	"z",
-	"x",
-	"c",
-	"v",
-	"b",
-	"n",
-	"m",
-	"back",
-];
-
-const Keyboard = ({ onEnter, onDelete, onLetter, row }) => {
+const Keyboard = ({ onEnter, onDelete, onLetter, keyboardConfig }) => {
 	const callKeyboardFunctions = (key) => {
 		key = key.toLowerCase();
-		if (key === "enter") {
+		if (key === 'tab') {
+			return;
+		} else if (key === 'enter') {
 			onEnter();
-		} else if (key === "backspace" || key === "back") {
+		} else if (key === 'backspace' || key === 'back') {
 			onDelete();
 		} else {
 			onLetter(key);
@@ -49,21 +20,24 @@ const Keyboard = ({ onEnter, onDelete, onLetter, row }) => {
 		const listener = (e) => {
 			callKeyboardFunctions(e.key);
 		};
-		document.addEventListener("keydown", listener);
+		document.addEventListener('keydown', listener);
 
 		return () => {
-			document.removeEventListener("keydown", listener);
+			document.removeEventListener('keydown', listener);
 		};
 	}, [callKeyboardFunctions]);
 
-	React.useEffect(() => {
-		console.log("The row has changed");
-	}, [row]);
-
 	return (
 		<div className={styles.keyboard}>
-			{allKeys.map((letter, i) => {
-				return <Key key={i} letter={letter} onClick={callKeyboardFunctions} />;
+			{keyboardConfig.map((letter, i) => {
+				return (
+					<Key
+						key={i}
+						letter={letter.letter}
+						onClick={callKeyboardFunctions}
+						status={letter.status}
+					/>
+				);
 			})}
 		</div>
 	);

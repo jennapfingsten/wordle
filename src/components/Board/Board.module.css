@@ -1,3 +1,5 @@
+@import "../../vars/global.css";
+
 .tileContainer {
 	width: 346px;
 	margin: 0 auto;
@@ -20,11 +22,11 @@
 	color: black;
 }
 [data-status="placed"] {
-	background-color: #6aaa64;
+	background-color: var(--color-placed);
 }
 [data-status="present"] {
-	background-color: #c9b458;
+	background-color: var(--color-present);
 }
 [data-status="absent"] {
-	background-color: grey;
+	background-color: var(--color-absent);
 }
