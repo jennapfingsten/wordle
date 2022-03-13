@@ -1,7 +1,7 @@
 @import '../../../vars/global.css';
 
 .key {
-	background-color: #d3d6da;
+	background-color: var(--light-grey);
 	padding: 10px;
 	margin: 2px;
 	text-transform: uppercase;
@@ -13,6 +13,7 @@
 	height: 58px;
 	grid-column: span 2;
 	font-weight: bold;
+	color: black;
 }
 
 .key.col3 {
