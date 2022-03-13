@@ -106,12 +106,10 @@ function App() {
 			updateBoardStatuses();
 			updateKeyboardStatuses();
 			if (currentGuess === todaysWord) {
-				alert('You win!');
+				endGame(true);
 			} else {
 				if (row === NUM_ROWS - 1) {
-					alert('Game over');
-					setGameOver(1);
-					//need a game over function to remove all of the listeners, etc
+					endGame(false);
 				} else {
 					increaseRow();
 					setCurrentGuess('');
@@ -141,6 +139,15 @@ function App() {
 
 	const increaseRow = () => {
 		setRow((curr) => curr + 1);
+	};
+
+	const endGame = (didWin) => {
+		const message = didWin ? 'You win!' : 'Game over! Word was ' + todaysWord;
+		setGameOver(1);
+
+		setTimeout(() => {
+			alert(message);
+		}, 300);
 	};
 
 	return (
