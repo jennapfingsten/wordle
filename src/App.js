@@ -1,27 +1,27 @@
-import React, { useState, useReducer, useContext } from "react";
-import styles from "./App.module.css";
-import Header from "./components/Header/Header";
-import Keyboard from "./components/Keyboard/Keyboard";
-import Board from "./components/Board/Board";
-import BoardContext from "./store/board-context";
-import { guesses } from "./data/guesses";
-import { answers } from "./data/answers";
-import { keys } from "./data/keyboard";
-import * as CONSTANTS from "./data/constants.js";
+import React, { useState, useReducer, useContext } from 'react';
+import styles from './App.module.css';
+import Header from './components/Header/Header';
+import Keyboard from './components/Keyboard/Keyboard';
+import Board from './components/Board/Board';
+import BoardContext from './store/board-context';
+import { guesses } from './data/guesses';
+import { answers } from './data/answers';
+import { keys } from './data/keyboard';
+import * as CONSTANTS from './data/constants.js';
 
 const { NUM_LETTERS, NUM_ROWS } = CONSTANTS;
 
 const defaultBoard = Array.from({ length: NUM_ROWS }, (v, i) => {
 	return Array.from({ length: NUM_LETTERS }, (w, j) => {
-		const id = i + "-" + j;
-		return { letter: "", id: id, status: "" };
+		const id = i + '-' + j;
+		return { letter: '', id: id, status: '' };
 	});
 });
 
 const keyboardConfig = Array.from(keys, (v, i) => {
 	return {
 		letter: v,
-		status: "",
+		status: '',
 	};
 });
 
@@ -40,7 +40,7 @@ const getTileStatus = (letter, index) => {
 		if (todaysWord.charAt(index) === letter) {
 			return CONSTANTS.PLACED;
 		} else {
-			return CONSTANTS.PENDING;
+			return CONSTANTS.PRESENT;
 		}
 	} else {
 		return CONSTANTS.ABSENT;
@@ -48,7 +48,7 @@ const getTileStatus = (letter, index) => {
 };
 
 function App() {
-	const [currentGuess, setCurrentGuess] = useState("");
+	const [currentGuess, setCurrentGuess] = useState('');
 	const [board, setBoard] = useState(defaultBoard);
 	const [keyboard, setKeyboard] = useState(keyboardConfig);
 	const [row, setRow] = useState(0);
@@ -59,13 +59,13 @@ function App() {
 
 		if (row < NUM_ROWS) {
 			setBoard((curr) => {
-				let workingRow = curr[row].slice(); //array for the row we're working on
+				let workingRow = curr[row].slice();
 				let workingBoard = curr.slice();
 				for (let i = 0; i < NUM_LETTERS; i++) {
 					workingRow[i].letter = currentGuess.charAt(i);
 					workingRow[i].status = currentGuess.charAt(i)
 						? CONSTANTS.PENDING
-						: "";
+						: '';
 				}
 
 				workingBoard[row] = workingRow;
@@ -106,19 +106,19 @@ function App() {
 			updateBoardStatuses();
 			updateKeyboardStatuses();
 			if (currentGuess === todaysWord) {
-				alert("You win!");
+				alert('You win!');
 			} else {
 				if (row === NUM_ROWS - 1) {
-					alert("Game over");
+					alert('Game over');
 					setGameOver(1);
 					//need a game over function to remove all of the listeners, etc
 				} else {
 					increaseRow();
-					setCurrentGuess("");
+					setCurrentGuess('');
 				}
 			}
 		} else {
-			alert("Not in word list");
+			alert('Not in word list');
 			//TODO: jiggle
 		}
 	};

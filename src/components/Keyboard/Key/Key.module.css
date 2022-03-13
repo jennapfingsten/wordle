@@ -1,41 +1,55 @@
-@import "../../../vars/global.css";
+@import '../../../vars/global.css';
 
 .key {
 	background-color: #d3d6da;
 	padding: 10px;
-	margin: 5px;
+	margin: 2px;
 	text-transform: uppercase;
 	border-radius: 4px;
 	border: none;
-	/* display: flex; */
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	height: 58px;
 	grid-column: span 2;
+	font-weight: bold;
 }
 
 .key.col3 {
 	grid-column: span 3;
+}
+@media screen and (max-width: 400px) {
+	.key.col3 {
+		font-size: 11px;
+	}
 }
 
 .spacer {
 	grid-column: span 3;
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
-	grid-template-areas: "s k k";
+	grid-template-areas: 's k k';
 }
 .spacer button {
 	grid-area: k;
 }
 
-[data-status="pending"] {
+@media screen and (min-width: 500px) {
+	.key {
+		margin: 5px;
+	}
+}
+
+[data-status='pending'] {
 	border: 2px solid black;
 	color: black;
 }
-[data-status="placed"] {
+[data-status='placed'] {
 	background-color: var(--color-placed);
 }
-[data-status="present"] {
+[data-status='present'] {
 	background-color: var(--color-present);
 }
-[data-status="absent"] {
+[data-status='absent'] {
 	background-color: var(--color-absent);
 }

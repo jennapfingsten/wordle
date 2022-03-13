@@ -1,6 +1,7 @@
 import React from 'react';
 import Key from './Key/Key';
 import styles from './Keyboard.module.css';
+import { keys } from '../../data/keyboard';
 
 const Keyboard = ({ onEnter, onDelete, onLetter, keyboardConfig }) => {
 	const callKeyboardFunctions = (key) => {
@@ -11,7 +12,7 @@ const Keyboard = ({ onEnter, onDelete, onLetter, keyboardConfig }) => {
 			onEnter();
 		} else if (key === 'backspace' || key === 'back') {
 			onDelete();
-		} else {
+		} else if (keys.includes(key)) {
 			onLetter(key);
 		}
 	};

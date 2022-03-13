@@ -19,14 +19,14 @@ const Board = ({ boardConfig }) => {
 						{row.map((tile) => {
 							const divStyle = { backgroundColor: tile.status };
 							return (
-								<button
+								<div
 									key={tile.id}
 									className={`${styles.tile} ${tile.status}`}
 									style={divStyle}
 									data-status={tile.status}
 								>
 									{tile.letter}
-								</button>
+								</div>
 							);
 						})}
 					</React.Fragment>

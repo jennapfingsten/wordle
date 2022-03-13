@@ -1,12 +1,9 @@
 .keyboard {
-	width: 800px;
+	max-width: 800px;
 	margin: 0 auto;
+	padding: 10px;
 	display: grid;
 	grid-template-columns: repeat(20, 1fr);
-	/* grid-template-areas: */
-	/* "k k k k k k k k k k k k k k k k k k k k"
-		"s k k k k k k k k k k k k k k k k k k s"
-		"e e e k k k k k k k k k k k k k k b b b"; */
 }
 
 .keyboard .row1 {

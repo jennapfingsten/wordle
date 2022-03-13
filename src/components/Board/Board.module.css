@@ -1,11 +1,12 @@
-@import "../../vars/global.css";
+@import '../../vars/global.css';
 
 .tileContainer {
-	width: 346px;
-	margin: 0 auto;
+	width: 100%;
+	max-width: 350px;
+	margin: 30px auto;
 	display: grid;
-	grid-template-columns: repeat(5, 65px);
-	grid-template-rows: repeat(6, 65px);
+	grid-template-columns: repeat(5, 1fr);
+	grid-template-rows: repeat(6, 1fr);
 	grid-gap: 5px;
 }
 .tile {
@@ -16,17 +17,23 @@
 	font-weight: bold;
 	text-transform: uppercase;
 	color: white;
+	border: 2px solid var(--light-grey);
 }
-[data-status="pending"] {
+.tile::before {
+	content: '';
+	display: inline-block;
+	padding-bottom: 100%;
+}
+[data-status='pending'] {
 	border: 2px solid black;
 	color: black;
 }
-[data-status="placed"] {
+[data-status='placed'] {
 	background-color: var(--color-placed);
 }
-[data-status="present"] {
+[data-status='present'] {
 	background-color: var(--color-present);
 }
-[data-status="absent"] {
+[data-status='absent'] {
 	background-color: var(--color-absent);
 }

@@ -1,5 +1,9 @@
 :root {
 	--color-placed: #6aaa64;
 	--color-present: #c9b458;
-	--color-absent: grey;
+	--color-absent: #787c7e;
+
+	--light-grey: #d3d6da;
+
+	--header-height: 50px;
 }
