@@ -1,13 +1,20 @@
 @import '../../vars/global.css';
 
+.board {
+	height: calc(100vh - 200px - 75px);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 10px;
+}
 .tileContainer {
 	width: 100%;
-	max-width: 350px;
-	margin: 30px auto;
 	display: grid;
 	grid-template-columns: repeat(5, 1fr);
 	grid-template-rows: repeat(6, 1fr);
 	grid-gap: 5px;
+	max-width: 350px;
+	margin: 0 auto;
 }
 .tile {
 	display: flex;
